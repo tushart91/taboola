@@ -1,5 +1,8 @@
 package com.taboola.hometest;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,21 +18,14 @@ public class JsonParser {
 	private static final HashSet<Character> SKIPCHARS = 
 			new HashSet<Character>(Arrays.asList(' ', '\t', '\n', '\r'));
 	
-	private static final HashSet<Character> NUMCHARS = 
+	private static final HashSet<Character> INT_CHARS = 
 			new HashSet<Character>(Arrays.asList('0','1','2','3','4','5',
-					'6','7','8','9','+','-','.','e','E'));
+					'6','7','8','9','+','-'));
+	
+	private static final HashSet<Character> FLOAT_CHARS = 
+			new HashSet<Character>(Arrays.asList('.','e','E'));
 	
 	private static int index = 0;
-	
-//	public static void main(String[] args) {
-//		HashMap<Object, Object> map = (HashMap<Object, Object>)parse("{\"key1\":[[1,2], [3,4], [5,6]]}");
-//		Object[] oarr = (Object[]) map.get("key1");
-//		
-////		Double[][] arr = Arrays.copyOf(oarr, oarr.length, Object[].class);
-////		Double[] arr = Arrays.copyOf(arr1, arr1.length, Double[].class); 
-////		System.out.println(arr[0][0]);
-//		System.out.println(index);
-//	}
 	
 	private static Object parse(String inputJson) {
 		
@@ -69,15 +65,25 @@ public class JsonParser {
 		return null;
 	}
 	
-	private static double parseNumber(char[] inputJson) {
+	private static Object parseNumber(char[] inputJson) {
 		int lastIndex = index;
-		for(;lastIndex < inputJson.length && 
-				NUMCHARS.contains(inputJson[lastIndex]); 
-				lastIndex++);
-		double number = Double.parseDouble(String.copyValueOf(inputJson, index, lastIndex - index));
-
+		boolean double_flag = false;
+		while (lastIndex < inputJson.length) {
+			if (FLOAT_CHARS.contains(inputJson[lastIndex])) {
+				double_flag = true;
+				lastIndex++;
+			}
+			else if (INT_CHARS.contains(inputJson[lastIndex])){
+				lastIndex++;
+			}
+			else
+				break;
+		}
+		String numStr = String.copyValueOf(inputJson, index, lastIndex - index);
 		index = lastIndex;
-		return number;
+		if (double_flag)
+			return Double.parseDouble(numStr);
+		return Integer.parseInt(numStr);
 	}
 	
 	private static String parseString(char[] inputJson) {

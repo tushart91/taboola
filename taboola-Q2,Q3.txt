@@ -1,0 +1,20 @@
+Q2:
+1) In all functions null checks have to be enforced as the data members are not primitive types, therefore the constructor can accept null for the arguments and will cause null pointer exception in all the member functions if the respective data member it uses is initialized to null.
+2) The equals functions is also erroneus since the argument of type Object is assumed of type Test. We will get a cast error if an argument of any type other than Test is passed. Code should be re-written like this making using of instanceof:
+            public boolean equals(Object obj) {
+                if (obj instanceof Test) {
+                    Test that = (Test) obj;
+                    return this.m_name == that.m_name;
+                }
+                return false;
+            }
+3) Should not use date class for data member. Date class was replaced by calendar class.
+3) isHistoric function will not work as expected. Use Calendar class.
+4) The argument for containsNumbers should be Integer even though it will work for the logic.
+
+
+Q3:
+A cache is used for very quick memory access. However since there could be several cache requests one would have to implement a buffer for these requests that will be processed in FIFO order. 
+The data structure of the cache is basically a doubly linked list along with a hashmap that points directly to the object in the linked list. The hashmap will also have bucketing. 
+Since the cache itself is responsible to get the missing data into the cache and this fetch could be very costly (database) we could implement asynchronous calls to apis. We can create a callback function to update the ordering of the cache elements based on the algorithm(LRU, etc.) used. These callbacks can be assigned threads from a thread pool so there are not too many threads created for cache misses. Thus, a buffer can be maintained for cache misses as well. 
+Also locks will be needed to be acquired to perform writes.
