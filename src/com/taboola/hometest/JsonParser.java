@@ -1,6 +1,7 @@
 package com.taboola.hometest;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,6 +27,27 @@ public class JsonParser {
 			new HashSet<Character>(Arrays.asList('.','e','E'));
 	
 	private static int index = 0;
+	
+//	public static void main(String[] args) {
+//		BufferedReader br = null;
+//		try {
+//			StringBuilder str = new StringBuilder();
+//			br = new BufferedReader(new FileReader("input1.json"));
+//			String line;
+//			while((line = br.readLine()) != null) {
+//				str.append(line);
+//			}
+//			System.out.println(((HashMap)parse(str.toString())).get("title"));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} finally {
+//			try {
+//				if (br != null)br.close();
+//			} catch (IOException ex) {
+//				ex.printStackTrace();
+//			}
+//		}
+//	}
 	
 	private static Object parse(String inputJson) {
 		
